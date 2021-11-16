@@ -1,9 +1,13 @@
+from IPython.core.display import display
 import streamlit as st
 import pandas as pd
 import numpy as np
 import tweepy
 import base64
 import time
+from IPython.display import HTML
+import requests
+
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
 
@@ -29,6 +33,8 @@ likes = []
 time = []
 retweets = []
 author = []
+tweet_id = []
+links = []
 
 
 def csv_downloader(data):
@@ -38,6 +44,15 @@ def csv_downloader(data):
     st.markdown("#### Download CSV File ###")
     href = f'<a href="data:file/csv;base64,{b64}" download="{new_filename}">Click Here to download!!</a>'
     st.markdown(href, unsafe_allow_html=True)
+
+
+def show_tweet(link):
+    """Display the contents of a tweet. """
+    url = "https://publish.twitter.com/oembed?url=%s" % link
+    response = requests.get(url)
+    html = response.json()["html"]
+    # display(HTML(html))
+    return html
 
 
 # take list as an input from the user in streamlit
@@ -50,14 +65,31 @@ if st.button("Scrape Tweets"):
             api.user_timeline, id=username, tweet_mode="extended"
         ).items(number_of_tweets):
             tweets.append(i.full_text)
+            tweet_id.append(i.id)
             likes.append(i.favorite_count)
             time.append(i.created_at)
             retweets.append(i.retweet)
             author.append(i.author.name)
+            links.append("https://twitter.com/twitter/statuses/" + str(i.id))
 
     df = pd.DataFrame(
-        {"tweets": tweets, "likes": likes, "time": time, "author": author}
+        {
+            "tweets": tweets,
+            "likes": likes,
+            "time": time,
+            "author": author,
+            "tweet_id": tweet_id,
+            "links": links,
+        }
     )
     st.dataframe(df)
 
-    csv_downloader(df)
+    for i in links:
+        # link = "https://twitter.com/twitter/statuses/1457787115404595208"
+        # st.markdown(display(i))
+        html = show_tweet(i)
+        st.markdown(html, unsafe_allow_html=True)
+
+    # sample_tweet_link = df.sample(1)["link"].values[0]
+    # display(sample_tweet_link)
+    # show_tweet(sample_tweet_link)
