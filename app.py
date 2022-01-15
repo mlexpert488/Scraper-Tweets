@@ -18,10 +18,10 @@ st.write(
 You can use this tool to scrape tweets from Twitter for multiple users and save them to a CSV file. 
 """
 )
-consumer_key = "R1coNCuo2L2God23pgjMB4iYn"
-consumer_secret = "fQ0THkl7jpWdsXiG0W4D7gVbFC1UiQ1tAZQ0yLkSJB6foi9hUC"
-access_token = "1301803926618927105-PwMZBGfZXMhFVSLNlquTk1qzb4ARmB"
-access_token_secret = "9brf8CDkk0mdY0zUDp36ayBmuAu6kV0WaDTahxDq2IoIP"
+consumer_key = "CODE"
+consumer_secret = "CODE"
+access_token = "CODE"
+access_token_secret = "CODE"
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
